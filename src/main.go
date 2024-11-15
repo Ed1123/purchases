@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"text/template"
 	"time"
 )
@@ -43,16 +44,28 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 
 		parsedDate, _ := time.Parse("2006-01-02", date)
 
+		amount, err := strconv.ParseFloat(r.FormValue("amount"), 32)
+		if err != nil {
+			http.Error(w, "Invalid amount", http.StatusBadRequest)
+			return
+		}
+
+		item := PurchaseItem{
+			Name:     r.FormValue("name"),
+			Amount:   float32(amount),
+			Category: r.FormValue("category"),
+		}
+
 		entry := PurchaseEntry{
 			Location:      location,
 			Date:          parsedDate,
-			PurchaseItems: nil,
+			PurchaseItems: []PurchaseItem{item},
 		}
 
 		jsonData, _ := json.Marshal(entry)
 
 		// Here you would send jsonData to the Google Apps Script URL
-		slog.Info("Data sent to Google Apps Script: ", "data", string(jsonData))
+		slog.Info("Data sent to Google Apps Script: ", "data", jsonData)
 
 		w.Write([]byte("Form submitted successfully!"))
 	}
