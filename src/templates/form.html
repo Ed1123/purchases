@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Entry Form</title>
+</head>
+<body>
+    <h3>Purchase Entry</h3>
+    <form id="purchase-form" method="POST" action="/submit">
+        <div>
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" value="1994-07-03">
+        </div>
+        <div id="items-container">
+            <div class="item">
+                <h3>Items</h3>
+                <label for="name">Name:</label>
+                <input id="name" type="text" name="name" required>
+                <label for="amount">Amount:</label>
+                <input id="amount" type="float" name="amount" required>
+                <label for="category">Category:</label>
+                <input id="category" type="text" name="category" required>
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
