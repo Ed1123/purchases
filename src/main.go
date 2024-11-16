@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -39,33 +38,41 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 
 func submitHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		location := r.FormValue("location")
-		date := r.FormValue("date")
-
-		parsedDate, _ := time.Parse("2006-01-02", date)
-
-		amount, err := strconv.ParseFloat(r.FormValue("amount"), 32)
+		err := r.ParseForm()
 		if err != nil {
-			http.Error(w, "Invalid amount", http.StatusBadRequest)
+			http.Error(w, "Error parsing form", http.StatusBadRequest)
 			return
 		}
+		location := r.FormValue("location")
+		date := r.FormValue("date")
+		parsedDate, _ := time.Parse("2006-01-02", date)
 
-		item := PurchaseItem{
-			Name:     r.FormValue("name"),
-			Amount:   float32(amount),
-			Category: r.FormValue("category"),
+		var items []PurchaseItem
+		names := r.Form["name"]
+		for i, name := range names {
+			amount, err := strconv.ParseFloat(r.Form["amount"][i], 32)
+			if err != nil {
+				http.Error(w, "Invalid amount", http.StatusBadRequest)
+				return
+			}
+			item := PurchaseItem{
+				Name:     name,
+				Amount:   float32(amount),
+				Category: r.Form["category"][i],
+			}
+			items = append(items, item)
 		}
 
 		entry := PurchaseEntry{
 			Location:      location,
 			Date:          parsedDate,
-			PurchaseItems: []PurchaseItem{item},
+			PurchaseItems: items,
 		}
 
-		jsonData, _ := json.Marshal(entry)
+		// jsonData, _ := json.Marshal(entry)
 
 		// Here you would send jsonData to the Google Apps Script URL
-		slog.Info("Data sent to Google Apps Script: ", "data", jsonData)
+		slog.Info("Data sent to Google Apps Script: ", "data", entry)
 
 		w.Write([]byte("Form submitted successfully!"))
 	}
