@@ -1,14 +1,19 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"net/http"
+	"os"
 	"strconv"
 	"text/template"
 	"time"
 
+	"github.com/Ed1123/purchases/src/google"
 	"github.com/Ed1123/purchases/src/models"
+	"github.com/joho/godotenv"
+	"google.golang.org/api/sheets/v4"
 )
 
 var formTemplate = template.Must(template.ParseFiles("src/templates/form.html"))
@@ -55,9 +60,27 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 		PurchaseItems: items,
 	}
 
-	// jsonData, _ := json.Marshal(entry)
+	srv, err := sheets.NewService(context.Background())
+	if err != nil {
+		slog.Error("Unable to create Google Sheets service", "error", err)
+		http.Error(w, "Failed to connect to Google Sheets", http.StatusInternalServerError)
+		return
+	}
 
-	// Here you would send jsonData to the Google Apps Script URL
+	spreadsheetId, ok := os.LookupEnv("SHEET_ID")
+	if !ok {
+		slog.Error("SHEET_ID not found")
+		http.Error(w, "Failed to connect to Google Sheets", http.StatusInternalServerError)
+		return
+	}
+
+	err = google.AddPurchaseToSheet(srv, spreadsheetId, entry)
+	if err != nil {
+		slog.Error("Failed to add purchase to sheet", "error", err)
+		http.Error(w, "Failed to add purchase to sheet", http.StatusInternalServerError)
+		return
+	}
+
 	slog.Info("Data sent to Google Apps Script: ", "data", entry)
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Data sent: %v", entry)))
@@ -83,6 +106,11 @@ func newItemHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		slog.Error("Failed to load environment variables", "error", err)
+		os.Exit(1)
+	}
 	http.HandleFunc("/", formHandler)
 	http.HandleFunc("/submit", submitHandler)
 	http.HandleFunc("/item", newItemHandler)
