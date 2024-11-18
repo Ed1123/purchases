@@ -1,12 +1,10 @@
-package main
+package google
 
 import (
-	"context"
 	"fmt"
 	"log"
-	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/Ed1123/purchases/src/models"
 	sheets "google.golang.org/api/sheets/v4"
 )
 
@@ -26,16 +24,20 @@ func readSheet(srv *sheets.Service, spreadsheetId, readRange string) {
 	}
 }
 
-func main() {
-	err := godotenv.Load(".env")
-	ctx := context.Background()
-	sheetsService, err := sheets.NewService(ctx)
+func AddPurchaseToSheet(srv *sheets.Service, spreadsheetId string, purchase models.PurchaseEntry) error {
+	var vr sheets.ValueRange
+	for _, item := range purchase.PurchaseItems {
+		dataRow := []interface{}{purchase.Location, purchase.Date.Format("2006-01-02"),
+			item.Name, item.Amount, item.Category}
+		vr.Values = append(vr.Values,
+			dataRow,
+		)
+	}
+	_, err := srv.Spreadsheets.Values.
+		Append(spreadsheetId, "A1", &vr).
+		ValueInputOption("USER_ENTERED").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve Sheets client: %v", err)
+		return fmt.Errorf("Unable to write data to sheet: %w", err)
 	}
-	sheet_id, ok := os.LookupEnv("SHEET_ID")
-	if !ok {
-		log.Fatalf("SHEET_ID not found")
-	}
-	readSheet(sheetsService, sheet_id, "A1:H4")
+	return nil
 }

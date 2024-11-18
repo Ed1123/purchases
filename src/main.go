@@ -7,19 +7,9 @@ import (
 	"strconv"
 	"text/template"
 	"time"
+
+	"github.com/Ed1123/purchases/src/models"
 )
-
-type PurchaseItem struct {
-	Name     string  `json:"name"`
-	Amount   float32 `json:"amount"`
-	Category string  `json:"category"`
-}
-
-type PurchaseEntry struct {
-	Location      string         `json:"location"`
-	Date          time.Time      `json:"date"`
-	PurchaseItems []PurchaseItem `json:"purchaseItems"`
-}
 
 var formTemplate = template.Must(template.ParseFiles("src/templates/form.html"))
 
@@ -43,7 +33,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	date := r.FormValue("date")
 	parsedDate, _ := time.Parse("2006-01-02", date)
 
-	var items []PurchaseItem
+	var items []models.PurchaseItem
 	names := r.Form["name"]
 	for i, name := range names {
 		amount, err := strconv.ParseFloat(r.Form["amount"][i], 32)
@@ -51,7 +41,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Invalid amount", http.StatusBadRequest)
 			return
 		}
-		item := PurchaseItem{
+		item := models.PurchaseItem{
 			Name:     name,
 			Amount:   float32(amount),
 			Category: r.Form["category"][i],
@@ -59,7 +49,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 		items = append(items, item)
 	}
 
-	entry := PurchaseEntry{
+	entry := models.PurchaseEntry{
 		Location:      location,
 		Date:          parsedDate,
 		PurchaseItems: items,
