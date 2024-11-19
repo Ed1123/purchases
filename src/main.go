@@ -111,10 +111,16 @@ func main() {
 		slog.Error("Failed to load environment variables", "error", err)
 		os.Exit(1)
 	}
+	port, ok := os.LookupEnv("PORT")
+	if !ok {
+		slog.Error("PORT not found")
+		os.Exit(1)
+	}
+
 	http.HandleFunc("/", formHandler)
 	http.HandleFunc("/submit", submitHandler)
 	http.HandleFunc("/item", newItemHandler)
 
-	slog.Info("Server started on port 8080")
-	http.ListenAndServe(":8080", nil)
+	slog.Info("Server started", "port", port)
+	http.ListenAndServe(":"+port, nil)
 }
