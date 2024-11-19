@@ -86,25 +86,6 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("Data sent: %v", entry)))
 }
 
-func newItemHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	slog.Info("New item row requested")
-	html := `
-		<div class="item">
-        	<label for="name">Name:</label>
-        	<input id="name" type="text" name="name" required>
-        	<label for="amount">Amount:</label>
-        	<input id="amount" type="float" name="amount" required>
-        	<label for="category">Category:</label>
-        	<input id="category" type="text" name="category" required>
-    	</div>
-	`
-	w.Write([]byte(html))
-}
-
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -118,7 +99,6 @@ func main() {
 
 	http.HandleFunc("/", formHandler)
 	http.HandleFunc("/submit", submitHandler)
-	http.HandleFunc("/item", newItemHandler)
 
 	slog.Info("Server started", "port", port)
 	http.ListenAndServe(":"+port, nil)
