@@ -23,15 +23,28 @@
           <label for="category">Category:</label>
           <input id="category" type="text" name="category" required />
         </div>
+        <button type="button" id="remove-item">Remove item</button>
         <button type="button" id="add-item">Add item</button>
       </fielset>
       <button type="submit">Submit</button>
     </form>
     <script>
-      button = document.getElementById('add-item');
-      button.addEventListener('click', function () {
+      insertButton = document.getElementById('add-item');
+      removeButton = document.getElementById('remove-item');
+      insertButton.addEventListener('click', function () {
         const item = document.getElementById('item').cloneNode(true);
-        document.getElementById('items-container').insertBefore(item, button);
+        document
+          .getElementById('items-container')
+          .insertBefore(item, removeButton);
+      });
+
+      removeButton.addEventListener('click', function () {
+        const items = document.getElementsByClassName('item');
+        if (items.length > 1) {
+          document
+            .getElementById('items-container')
+            .removeChild(items[items.length - 1]);
+        }
       });
     </script>
   </body>
