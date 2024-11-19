@@ -108,8 +108,7 @@ func newItemHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		slog.Error("Failed to load environment variables", "error", err)
-		os.Exit(1)
+		slog.Warn(".env file not found")
 	}
 	port, ok := os.LookupEnv("PORT")
 	if !ok {
