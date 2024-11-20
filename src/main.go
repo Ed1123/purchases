@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"html/template"
 	"log/slog"
 	"net/http"
 	"os"
 	"strconv"
-	"text/template"
 	"time"
 
 	"github.com/Ed1123/purchases/src/google"
@@ -16,11 +16,15 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-var formTemplate = template.Must(template.ParseFiles("src/templates/form.html"))
-
 func formHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("src/templates/form.html"))
 	if r.Method == http.MethodGet {
-		formTemplate.Execute(w, nil)
+		data := struct {
+			Today time.Time
+		}{
+			Today: time.Now(),
+		}
+		tmpl.Execute(w, data)
 	}
 }
 
