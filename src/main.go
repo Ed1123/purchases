@@ -16,15 +16,11 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
+var tmpl = template.Must(template.ParseFiles("src/templates/form.html"))
+
 func formHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("src/templates/form.html"))
 	if r.Method == http.MethodGet {
-		data := struct {
-			Today time.Time
-		}{
-			Today: time.Now(),
-		}
-		tmpl.Execute(w, data)
+		tmpl.Execute(w, nil)
 	}
 }
 

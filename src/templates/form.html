@@ -11,8 +11,7 @@
         <label for="location">Location</label>
         <input type="text" id="location" name="location" required />
         <label for="date">Date</label>
-        <input type="date" id="date" name="date" value={{.Today.Format
-        "2006-01-02"}} />
+        <input type="date" id="date" name="date" required />
       </div>
       <fielset id="items-container">
         <h3>Items</h3>
@@ -30,6 +29,7 @@
       <button type="submit">Submit</button>
     </form>
     <script>
+      // Add and remove items buttons
       insertButton = document.getElementById('add-item');
       removeButton = document.getElementById('remove-item');
       insertButton.addEventListener('click', function () {
@@ -39,6 +39,7 @@
           .insertBefore(item, removeButton);
       });
 
+      // Remove last item
       removeButton.addEventListener('click', function () {
         const items = document.getElementsByClassName('item');
         if (items.length > 1) {
@@ -47,6 +48,9 @@
             .removeChild(items[items.length - 1]);
         }
       });
+
+      // Default input date to date of user
+      document.getElementById('date').valueAsDate = new Date();
     </script>
   </body>
 </html>
