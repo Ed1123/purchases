@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"html/template"
 	"log/slog"
 	"net/http"
@@ -16,11 +15,12 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-var tmpl = template.Must(template.ParseFiles("src/templates/form.html"))
+var form = template.Must(template.ParseFiles("src/templates/form.html"))
+var submitted = template.Must(template.ParseFiles("src/templates/submitted.html"))
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		tmpl.Execute(w, nil)
+		form.Execute(w, nil)
 	}
 }
 
@@ -83,7 +83,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 
 	slog.Info("Data sent to Google Apps Script: ", "data", entry)
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("Data sent: %v", entry)))
+	submitted.Execute(w, entry)
 }
 
 func main() {
