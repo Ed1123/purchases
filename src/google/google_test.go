@@ -40,3 +40,28 @@ func TestAddPurchaseToSheet(t *testing.T) {
 	}
 
 }
+func TestGetCategories(t *testing.T) {
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		t.Fatalf("Failed to load environment variables: %v", err)
+	}
+	srv, err := sheets.NewService(context.Background())
+	if err != nil {
+		t.Fatalf("Unable to retrieve Sheets client: %v", err)
+	}
+
+	spreadsheetId, ok := os.LookupEnv("SHEET_ID")
+	if !ok {
+		t.Fatalf("SHEET_ID not found")
+	}
+
+	categories, err := GetCategories(srv, spreadsheetId)
+	if err != nil {
+		t.Fatalf("Failed to get categories from sheet: %v", err)
+	}
+	t.Log(categories)
+
+	if len(categories) == 0 {
+		t.Fatalf("Expected to find categories, but found none")
+	}
+}
