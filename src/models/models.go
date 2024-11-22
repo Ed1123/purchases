@@ -4,7 +4,8 @@ import "time"
 
 type PurchaseItem struct {
 	Name      string  `json:"name"`
-	Amount    float32 `json:"amount"`
+	Price     float32 `json:"price"`
+	Quantity  int     `json:"quantity"`
 	Category  string  `json:"category"`
 	Recipient string  `json:"recipient"`
 }

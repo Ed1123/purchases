@@ -41,14 +41,20 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	var items []models.PurchaseItem
 	names := r.Form["name"]
 	for i, name := range names {
-		amount, err := strconv.ParseFloat(r.Form["amount"][i], 32)
+		price, err := strconv.ParseFloat(r.Form["price"][i], 32)
 		if err != nil {
 			http.Error(w, "Invalid amount", http.StatusBadRequest)
 			return
 		}
+		quantity, err := strconv.Atoi(r.Form["quantity"][i])
+		if err != nil {
+			http.Error(w, "Invalid quantity", http.StatusBadRequest)
+			return
+		}
 		item := models.PurchaseItem{
 			Name:      name,
-			Amount:    float32(amount),
+			Price:     float32(price),
+			Quantity:  quantity,
 			Category:  r.Form["category"][i],
 			Recipient: r.Form["recipient"][i],
 		}

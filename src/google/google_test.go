@@ -29,8 +29,20 @@ func TestAddPurchaseToSheet(t *testing.T) {
 		Location: "Test Location",
 		Date:     time.Now(),
 		PurchaseItems: []models.PurchaseItem{
-			{Name: "Item1", Amount: 10.0, Category: "Category1"},
-			{Name: "Item2", Amount: 20.0, Category: "Category2"},
+			{
+				Name:      "Test Item",
+				Price:     1.99,
+				Quantity:  1,
+				Category:  "Test Category",
+				Recipient: "Test Recipient",
+			},
+			{
+				Name:      "Test Item",
+				Price:     1.99,
+				Quantity:  1,
+				Category:  "Test Category",
+				Recipient: "Test Recipient",
+			},
 		},
 	}
 
