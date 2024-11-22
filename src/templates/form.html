@@ -21,7 +21,20 @@
           <label for="amount">Amount</label>
           <input id="amount" type="float" name="amount" required />
           <label for="category">Category</label>
-          <input id="category" type="text" name="category" required />
+          <select id="category" name="category">
+            <option value="Groceries">Groceries</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Household Supplies">Household Supplies</option>
+            <option value="Dining and Entertainment">
+              Dining and Entertainment
+            </option>
+            <option value="Health and Wellness">Health and Wellness</option>
+            <option value="Clothing and accessories">
+              Clothing and accessories
+            </option>
+            <option value="Housing">Housing</option>
+            <option value="Gifts">Gifts</option>
+          </select>
         </div>
         <button type="button" id="remove-item">Remove item</button>
         <button type="button" id="add-item">Add item</button>
@@ -34,6 +47,8 @@
       removeButton = document.getElementById('remove-item');
       insertButton.addEventListener('click', function () {
         const item = document.getElementById('item').cloneNode(true);
+        item.children.category.value =
+          document.getElementById('category').value;
         document
           .getElementById('items-container')
           .insertBefore(item, removeButton);
