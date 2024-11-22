@@ -47,9 +47,10 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		item := models.PurchaseItem{
-			Name:     name,
-			Amount:   float32(amount),
-			Category: r.Form["category"][i],
+			Name:      name,
+			Amount:    float32(amount),
+			Category:  r.Form["category"][i],
+			Recipient: r.Form["recipient"][i],
 		}
 		items = append(items, item)
 	}

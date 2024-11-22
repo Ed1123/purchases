@@ -3,9 +3,10 @@ package models
 import "time"
 
 type PurchaseItem struct {
-	Name     string  `json:"name"`
-	Amount   float32 `json:"amount"`
-	Category string  `json:"category"`
+	Name      string  `json:"name"`
+	Amount    float32 `json:"amount"`
+	Category  string  `json:"category"`
+	Recipient string  `json:"recipient"`
 }
 
 type PurchaseEntry struct {

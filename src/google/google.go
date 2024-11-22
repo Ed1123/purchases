@@ -11,7 +11,7 @@ func AddPurchaseToSheet(srv *sheets.Service, spreadsheetId string, purchase mode
 	var vr sheets.ValueRange
 	for _, item := range purchase.PurchaseItems {
 		dataRow := []interface{}{purchase.Location, purchase.Date.Format("2006-01-02"),
-			item.Name, item.Amount, item.Category}
+			item.Name, item.Amount, item.Category, item.Recipient}
 		vr.Values = append(vr.Values,
 			dataRow,
 		)
