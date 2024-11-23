@@ -12,6 +12,8 @@
         <input type="text" id="location" name="location" required />
         <label for="date">Date</label>
         <input type="date" id="date" name="date" required />
+        <label for="total">Total</label>
+        <input type="float" id="total" name="total" value="0.00" />
       </div>
       <fielset id="items-container">
         <h3>Items</h3>
@@ -19,9 +21,16 @@
           <label for="name">Name</label>
           <input id="name" type="text" name="name" required />
           <label for="price">Price</label>
-          <input id="price" type="float" name="price" required />
+          <input id="price" type="float" name="price" value="0" data-old="0" />
           <label for="quantity">Quantity</label>
-          <input id="quantity" type="number" name="quantity" min="1" required />
+          <input
+            id="quantity"
+            type="number"
+            name="quantity"
+            min="1"
+            value="1"
+            data-old="1"
+          />
           <label for="category">Category</label>
           <select id="category" name="category">
             <option value="Groceries">Groceries</option>
@@ -50,6 +59,23 @@
       <button type="submit">Submit</button>
     </form>
     <script>
+      function updateTotal() {
+        items = document.querySelectorAll('.item');
+        total = 0;
+        items.forEach(function (item) {
+          total +=
+            parseFloat(item.querySelector('#price').value) *
+            parseInt(item.querySelector('#quantity').value);
+        });
+        document.getElementById('total').value = total.toFixed(2);
+      }
+
+      // Auto fill total
+      document.getElementById('price').addEventListener('change', updateTotal);
+      document
+        .getElementById('quantity')
+        .addEventListener('change', updateTotal);
+
       // Add and remove items buttons
       insertButton = document.getElementById('add-item');
       removeButton = document.getElementById('remove-item');
@@ -57,9 +83,12 @@
         const item = document.getElementById('item').cloneNode(true);
         item.children.category.value =
           document.getElementById('category').value;
+        item.children.price.addEventListener('change', updateTotal);
+        item.children.quantity.addEventListener('change', updateTotal);
         document
           .getElementById('items-container')
           .insertBefore(item, removeButton);
+        updateTotal();
       });
 
       // Remove last item
@@ -70,6 +99,7 @@
             .getElementById('items-container')
             .removeChild(items[items.length - 1]);
         }
+        updateTotal();
       });
 
       // Default input date to date of user
