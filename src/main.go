@@ -36,11 +36,20 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	location := r.FormValue("location")
 	date := r.FormValue("date")
-	parsedDate, _ := time.Parse("2006-01-02", date)
+	parsedDate, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		http.Error(w, "Invalid date", http.StatusBadRequest)
+		return
+	}
+	formTotal, err := strconv.ParseFloat(r.FormValue("total"), 32)
+	if err != nil {
+		http.Error(w, "Invalid total", http.StatusBadRequest)
+		return
+	}
 
 	var items []models.PurchaseItem
-	names := r.Form["name"]
-	for i, name := range names {
+	formItems := r.Form["name"]
+	for i := range formItems {
 		price, err := strconv.ParseFloat(r.Form["price"][i], 32)
 		if err != nil {
 			http.Error(w, "Invalid amount", http.StatusBadRequest)
@@ -52,7 +61,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		item := models.PurchaseItem{
-			Name:      name,
+			Name:      r.Form["name"][i],
 			Price:     float32(price),
 			Quantity:  quantity,
 			Category:  r.Form["category"][i],
@@ -60,6 +69,8 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		items = append(items, item)
 	}
+
+	correctTax(items, float32(formTotal))
 
 	entry := models.PurchaseEntry{
 		Location:      location,
@@ -91,6 +102,23 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Info("Data sent to Google Apps Script: ", "data", entry)
 	w.WriteHeader(http.StatusOK)
 	submitted.Execute(w, entry)
+}
+
+// Applies taxes proportionally if the total amount is different
+// from the sum of the items
+func correctTax(items []models.PurchaseItem, taxedTotal float32) {
+	var calcTotal float32
+	for _, item := range items {
+		calcTotal += item.Price * float32(item.Quantity)
+	}
+	if taxedTotal == calcTotal {
+		return
+	}
+	tax := taxedTotal - calcTotal
+	for i, item := range items {
+		item.Price += tax / calcTotal * item.Price
+		items[i] = item
+	}
 }
 
 func main() {
