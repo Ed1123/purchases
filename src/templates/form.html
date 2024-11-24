@@ -1,109 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
     <title>Purchase Entry Form</title>
-  </head>
-  <body>
+</head>
+
+<body>
     <h3>Purchase Entry</h3>
     <form id="purchase-form" method="POST" action="/submit">
-      <div>
-        <label for="location">Location</label>
-        <input type="text" id="location" name="location" required />
-        <label for="date">Date</label>
-        <input type="date" id="date" name="date" required />
-        <label for="total">Total</label>
-        <input type="float" id="total" name="total" value="0.00" />
-      </div>
-      <fielset id="items-container">
-        <h3>Items</h3>
-        <div id="item" class="item">
-          <label for="name">Name</label>
-          <input id="name" type="text" name="name" required />
-          <label for="price">Price</label>
-          <input id="price" type="float" name="price" value="0" data-old="0" />
-          <label for="quantity">Quantity</label>
-          <input
-            id="quantity"
-            type="number"
-            name="quantity"
-            min="1"
-            value="1"
-            data-old="1"
-          />
-          <label for="category">Category</label>
-          <select id="category" name="category">
-            <option value="Groceries">Groceries</option>
-            <option value="Transportation">Transportation</option>
-            <option value="Household Supplies">Household Supplies</option>
-            <option value="Dining and Entertainment">
-              Dining and Entertainment
-            </option>
-            <option value="Health and Wellness">Health and Wellness</option>
-            <option value="Clothing and accessories">
-              Clothing and accessories
-            </option>
-            <option value="Housing">Housing</option>
-            <option value="Gifts">Gifts</option>
-          </select>
-          <label for="recipient">For?</label>
-          <select id="recipient" name="recipient">
-            <option value="Family">Family</option>
-            <option value="Nat">Nat</option>
-            <option value="Ed">Ed</option>
-          </select>
+        <div>
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" required />
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" required />
+            <label for="total">Total</label>
+            <input type="float" id="total" name="total" value="0.00" />
         </div>
-        <button type="button" id="remove-item">Remove item</button>
-        <button type="button" id="add-item">Add item</button>
-      </fielset>
-      <button type="submit">Submit</button>
+        <fieldset id="items-container">
+            <h3>Items</h3>
+            <div id="item" class="item">
+                <label for="name">Name</label>
+                <input id="name" type="text" name="name" required />
+                <label for="price">Price</label>
+                <input id="price" type="float" name="price" value="0" data-old="0" />
+                <label for="quantity">Quantity</label>
+                <input id="quantity" type="number" name="quantity" min="1" value="1" data-old="1" />
+                <label for="category">Category</label>
+                <select id="category" name="category">
+                    <option value="Groceries">Groceries</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Household Supplies">Household Supplies</option>
+                    <option value="Dining and Entertainment">
+                        Dining and Entertainment
+                    </option>
+                    <option value="Health and Wellness">Health and Wellness</option>
+                    <option value="Clothing and accessories">
+                        Clothing and accessories
+                    </option>
+                    <option value="Housing">Housing</option>
+                    <option value="Gifts">Gifts</option>
+                </select>
+                <label for="recipient">For?</label>
+                <select id="recipient" name="recipient">
+                    <option value="Family">Family</option>
+                    <option value="Nat">Nat</option>
+                    <option value="Ed">Ed</option>
+                </select>
+            </div>
+            <button type="button" id="add-item">Add item</button>
+            <button type="button" id="remove-item">Remove item</button>
+        </fieldset>
+        <button type="submit">Submit</button>
     </form>
     <script>
-      function updateTotal() {
-        items = document.querySelectorAll('.item');
-        total = 0;
-        items.forEach(function (item) {
-          total +=
-            parseFloat(item.querySelector('#price').value) *
-            parseInt(item.querySelector('#quantity').value);
-        });
-        document.getElementById('total').value = total.toFixed(2);
-      }
-
-      // Auto fill total
-      document.getElementById('price').addEventListener('change', updateTotal);
-      document
-        .getElementById('quantity')
-        .addEventListener('change', updateTotal);
-
-      // Add and remove items buttons
-      insertButton = document.getElementById('add-item');
-      removeButton = document.getElementById('remove-item');
-      insertButton.addEventListener('click', function () {
-        const item = document.getElementById('item').cloneNode(true);
-        item.children.category.value =
-          document.getElementById('category').value;
-        item.children.price.addEventListener('change', updateTotal);
-        item.children.quantity.addEventListener('change', updateTotal);
-        document
-          .getElementById('items-container')
-          .insertBefore(item, removeButton);
-        updateTotal();
-      });
-
-      // Remove last item
-      removeButton.addEventListener('click', function () {
-        const items = document.getElementsByClassName('item');
-        if (items.length > 1) {
-          document
-            .getElementById('items-container')
-            .removeChild(items[items.length - 1]);
+        function updateTotal() {
+            items = document.querySelectorAll('.item');
+            total = 0;
+            items.forEach(function (item) {
+                total +=
+                    parseFloat(item.querySelector('#price').value) *
+                    parseInt(item.querySelector('#quantity').value);
+            });
+            document.getElementById('total').value = total.toFixed(2);
         }
-        updateTotal();
-      });
 
-      // Default input date to date of user
-      document.getElementById('date').valueAsDate = new Date();
+        // Auto fill total
+        document.getElementById('price').addEventListener('change', updateTotal);
+        document
+            .getElementById('quantity')
+            .addEventListener('change', updateTotal);
+
+        // Add and remove items buttons
+        insertButton = document.getElementById('add-item');
+        removeButton = document.getElementById('remove-item');
+        insertButton.addEventListener('click', function () {
+            const item = document.getElementById('item').cloneNode(true);
+            item.children.category.value =
+                document.getElementById('category').value;
+            item.children.price.addEventListener('change', updateTotal);
+            item.children.quantity.addEventListener('change', updateTotal);
+            document
+                .getElementById('items-container')
+                .insertBefore(item, insertButton);
+            updateTotal();
+        });
+
+        // Remove last item
+        removeButton.addEventListener('click', function () {
+            const items = document.getElementsByClassName('item');
+            if (items.length > 1) {
+                document
+                    .getElementById('items-container')
+                    .removeChild(items[items.length - 1]);
+            }
+            updateTotal();
+        });
+
+        // Default input date to date of user
+        document.getElementById('date').valueAsDate = new Date();
     </script>
-  </body>
+</body>
+
 </html>

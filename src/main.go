@@ -132,6 +132,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	http.Handle("/static/", http.FileServer(http.Dir("src")))
 	http.HandleFunc("/", formHandler)
 	http.HandleFunc("/submit", submitHandler)
 
