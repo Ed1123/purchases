@@ -26,7 +26,7 @@ func TestAddPurchaseToSheet(t *testing.T) {
 		t.Fatalf("SHEET_ID not found")
 	}
 	purchase := models.PurchaseEntry{
-		Location: "Test Location",
+		Merchant: "Test Merchant",
 		Date:     time.Now(),
 		PurchaseItems: []models.PurchaseItem{
 			{

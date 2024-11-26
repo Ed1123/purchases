@@ -10,7 +10,7 @@ import (
 func AddPurchaseToSheet(srv *sheets.Service, spreadsheetId string, purchase models.PurchaseEntry) error {
 	var vr sheets.ValueRange
 	for _, item := range purchase.PurchaseItems {
-		dataRow := []interface{}{purchase.Location, purchase.Date.Format("2006-01-02"),
+		dataRow := []interface{}{purchase.Merchant, purchase.Date.Format("2006-01-02"),
 			item.Name, item.Price, item.Quantity, item.Category, item.Recipient}
 		vr.Values = append(vr.Values,
 			dataRow,
@@ -32,7 +32,7 @@ func GetCategories(srv *sheets.Service, spreadsheetId string) ([]string, error) 
 	}
 
 	if len(resp.Values) == 0 {
-		return nil, fmt.Errorf("no cateogories found in spreadsheet")
+		return nil, fmt.Errorf("no categories found in spreadsheet")
 	}
 
 	var categories []string

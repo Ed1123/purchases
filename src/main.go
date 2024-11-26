@@ -34,7 +34,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error parsing form", http.StatusBadRequest)
 		return
 	}
-	location := r.FormValue("location")
+	merchant := r.FormValue("merchant")
 	date := r.FormValue("date")
 	parsedDate, err := time.Parse("2006-01-02", date)
 	if err != nil {
@@ -73,7 +73,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	correctTax(items, float32(formTotal))
 
 	entry := models.PurchaseEntry{
-		Location:      location,
+		Merchant:      merchant,
 		Date:          parsedDate,
 		PurchaseItems: items,
 	}

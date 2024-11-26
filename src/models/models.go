@@ -11,7 +11,7 @@ type PurchaseItem struct {
 }
 
 type PurchaseEntry struct {
-	Location      string         `json:"location"`
+	Merchant      string         `json:"merchant"`
 	Date          time.Time      `json:"date"`
 	PurchaseItems []PurchaseItem `json:"purchaseItems"`
 }
