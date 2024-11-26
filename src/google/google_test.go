@@ -77,3 +77,34 @@ func TestGetCategories(t *testing.T) {
 		t.Fatalf("Expected to find categories, but found none")
 	}
 }
+func TestGetAutocompleteData(t *testing.T) {
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		t.Fatalf("Failed to load environment variables: %v", err)
+	}
+	srv, err := sheets.NewService(context.Background())
+	if err != nil {
+		t.Fatalf("Unable to retrieve Sheets client: %v", err)
+	}
+
+	spreadsheetId, ok := os.LookupEnv("SHEET_ID")
+	if !ok {
+		t.Fatalf("SHEET_ID not found")
+	}
+
+	data, err := GetAutocompleteData(srv, spreadsheetId)
+	if err != nil {
+		t.Fatalf("Failed to get autocomplete data from sheet: %v", err)
+	}
+	t.Log(data)
+
+	if len(data.Merchants) == 0 {
+		t.Fatalf("Expected to find merchants, but found none")
+	}
+	if len(data.Names) == 0 {
+		t.Fatalf("Expected to find names, but found none")
+	}
+	if len(data.Categories) == 0 {
+		t.Fatalf("Expected to find categories, but found none")
+	}
+}

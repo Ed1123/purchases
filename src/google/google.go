@@ -41,3 +41,43 @@ func GetCategories(srv *sheets.Service, spreadsheetId string) ([]string, error) 
 	}
 	return categories, nil
 }
+
+type AutocompleteData struct {
+	Merchants  []string
+	Names      []string
+	Categories []string
+}
+
+func GetAutocompleteData(srv *sheets.Service, spreadsheetId string) (AutocompleteData, error) {
+	resp, err := srv.Spreadsheets.Values.Get(spreadsheetId, "autocomplete!A:C").Do()
+	if err != nil {
+		return AutocompleteData{}, fmt.Errorf("unable to retrieve autocomplete data from sheet: %w", err)
+	}
+
+	if len(resp.Values) == 0 {
+		return AutocompleteData{}, fmt.Errorf("no autocomplete data found in spreadsheet")
+	}
+
+	var data AutocompleteData
+	for _, row := range resp.Values {
+		var name, category string
+		merchant := row[0].(string)
+		if len(row) >= 2 {
+			name = row[1].(string)
+		}
+		if len(row) >= 3 {
+			category = row[2].(string)
+		}
+
+		if merchant != "" {
+			data.Merchants = append(data.Merchants, merchant)
+		}
+		if name != "" {
+			data.Names = append(data.Names, name)
+		}
+		if category != "" {
+			data.Categories = append(data.Categories, category)
+		}
+	}
+	return data, nil
+}
