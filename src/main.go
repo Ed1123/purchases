@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"html/template"
 	"log/slog"
 	"net/http"
@@ -121,6 +122,48 @@ func correctTax(items []models.PurchaseItem, taxedTotal float32) {
 	}
 }
 
+func autocompleteHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	srv, err := sheets.NewService(context.Background())
+	if err != nil {
+		slog.Error("Unable to create Google Sheets service", "error", err)
+		http.Error(w, "Failed to connect to Google Sheets", http.StatusInternalServerError)
+		return
+	}
+
+	spreadsheetId, ok := os.LookupEnv("SHEET_ID")
+	if !ok {
+		slog.Error("SHEET_ID not found")
+		http.Error(w, "Failed to connect to Google Sheets", http.StatusInternalServerError)
+		return
+	}
+
+	data, err := google.GetAutocompleteData(srv, spreadsheetId)
+	if err != nil {
+		slog.Error("Failed to get autocomplete data", "error", err)
+		http.Error(w, "Failed to get autocomplete data", http.StatusInternalServerError)
+		return
+	}
+	option := "<option value=\"%s\"></option>"
+	options := ""
+	for _, merchant := range data.Merchants {
+		options += fmt.Sprintf(option, merchant)
+	}
+	merchants := fmt.Sprintf("<datalist id=\"merchants\" >%s</datalist>", options)
+
+	options = ""
+	for _, itemName := range data.ItemNames {
+		options += fmt.Sprintf(option, itemName)
+	}
+	itemNames := fmt.Sprintf("<datalist id=\"item-names\" >%s</datalist>", options)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(merchants + itemNames))
+}
+
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -135,6 +178,7 @@ func main() {
 	http.Handle("/static/", http.FileServer(http.Dir("src")))
 	http.HandleFunc("/", formHandler)
 	http.HandleFunc("/submit", submitHandler)
+	http.HandleFunc("/autocomplete", autocompleteHandler)
 
 	slog.Info("Server started", "port", port)
 	http.ListenAndServe(":"+port, nil)

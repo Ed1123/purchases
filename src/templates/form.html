@@ -6,6 +6,7 @@
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="stylesheet" type="text/css" href="static/style.css" />
+    <script src="static/htmx.min.js"></script>
     <title>Purchase Entry Form</title>
 </head>
 
@@ -14,7 +15,7 @@
     <form id="purchase-form" method="POST" action="/submit">
         <fieldset>
             <label for="merchant">Merchant</label>
-            <input type="text" id="merchant" name="merchant" required />
+            <input list="merchants" type="text" id="merchant" name="merchant" required />
             <label for="date">Date</label>
             <input type="date" id="date" name="date" required />
             <label for="total">Total</label>
@@ -24,7 +25,7 @@
             <h3>Items</h3>
             <fieldset id="item" class="item">
                 <label for="name">Name</label>
-                <input id="name" type="text" name="name" required />
+                <input list="item-names" id="name" type="text" name="name" required />
                 <label for="price">Price</label>
                 <input id="price" type="number" name="price" value="0" data-old="0" step="0.01" min="0" />
                 <label for="quantity">Quantity</label>
@@ -56,6 +57,9 @@
         </fieldset>
         <button type="submit">Submit</button>
     </form>
+
+    <autocomplete hx-get="/autocomplete" hx-trigger="load"></autocomplete>
+
     <script>
         function updateTotal() {
             items = document.querySelectorAll('.item');

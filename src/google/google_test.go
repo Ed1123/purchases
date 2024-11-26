@@ -101,7 +101,7 @@ func TestGetAutocompleteData(t *testing.T) {
 	if len(data.Merchants) == 0 {
 		t.Fatalf("Expected to find merchants, but found none")
 	}
-	if len(data.Names) == 0 {
+	if len(data.ItemNames) == 0 {
 		t.Fatalf("Expected to find names, but found none")
 	}
 	if len(data.Categories) == 0 {

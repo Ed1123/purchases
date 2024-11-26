@@ -44,7 +44,7 @@ func GetCategories(srv *sheets.Service, spreadsheetId string) ([]string, error) 
 
 type AutocompleteData struct {
 	Merchants  []string
-	Names      []string
+	ItemNames  []string
 	Categories []string
 }
 
@@ -73,7 +73,7 @@ func GetAutocompleteData(srv *sheets.Service, spreadsheetId string) (Autocomplet
 			data.Merchants = append(data.Merchants, merchant)
 		}
 		if name != "" {
-			data.Names = append(data.Names, name)
+			data.ItemNames = append(data.ItemNames, name)
 		}
 		if category != "" {
 			data.Categories = append(data.Categories, category)
