@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/Ed1123/purchases/src/google"
@@ -62,7 +63,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		item := models.PurchaseItem{
-			Name:      r.Form["name"][i],
+			Name:      strings.TrimSpace(r.Form["name"][i]),
 			Price:     float32(price),
 			Quantity:  quantity,
 			Category:  r.Form["category"][i],
@@ -74,7 +75,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 	correctTax(items, float32(formTotal))
 
 	entry := models.PurchaseEntry{
-		Merchant:      merchant,
+		Merchant:      strings.TrimSpace(merchant),
 		Date:          parsedDate,
 		PurchaseItems: items,
 	}
