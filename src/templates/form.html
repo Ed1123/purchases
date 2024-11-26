@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="stylesheet" type="text/css" href="static/style.css" />
     <title>Purchase Entry Form</title>
 </head>
@@ -17,7 +18,7 @@
             <label for="date">Date</label>
             <input type="date" id="date" name="date" required />
             <label for="total">Total</label>
-            <input type="number" id="total" name="total" value="0.00" step="0.01" />
+            <input type="number" id="total" name="total" value="0.00" step="0.01" min="0" />
         </fieldset>
         <fieldset id="items-container">
             <h3>Items</h3>
@@ -25,7 +26,7 @@
                 <label for="name">Name</label>
                 <input id="name" type="text" name="name" required />
                 <label for="price">Price</label>
-                <input id="price" type="number" name="price" value="0" data-old="0" step="0.01" />
+                <input id="price" type="number" name="price" value="0" data-old="0" step="0.01" min="0" />
                 <label for="quantity">Quantity</label>
                 <input id="quantity" type="number" name="quantity" min="1" value="1" data-old="1" />
                 <label for="category">Category</label>
