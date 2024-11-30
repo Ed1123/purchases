@@ -4,31 +4,32 @@
 }
 
 body {
-  display: grid;
-  /* flex-direction: column;
-  align-items: flex-start; */
-  justify-content: center;
-  width: 100%;
-  overflow-x: hidden;
+  background-color: rgb(56, 105, 147);
+  display: flex;
+  flex-direction: column;
 }
 
-body>* {
-  width: 320px;
+#container {
+  margin: auto;
+  width: 640px;
+  max-width: 90vw;
+  border: solid 1px red;
 }
 
 h3 {
+  background-color: rgb(0, 132, 168);
+  color: white;
   font-size: x-large;
-  color: turquoise;
   align-self: center;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+
 }
 
-form {
-  align-self: center;
-}
-
-h2 {
+/* h2 {
   color: turquoise
-}
+} */
 
 fieldset {
   padding-bottom: 0%;
@@ -43,19 +44,13 @@ select {
   margin-right: 100%;
   margin-bottom: 20px;
   margin-top: 5px;
+  border: none;
+  border-bottom: 2px solid gray;
 }
 
-input[type="number"] {
-  width: 70px;
-}
-
-input[type="text"] {
-  width: 150px;
-}
-
-button {
-  padding: 8px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  margin-right: 10px;
+input:focus {
+  outline: transparent;
+  animation:forwards 5s;
+  border: none;
+  border-bottom: 2px solid turquoise;
 }
