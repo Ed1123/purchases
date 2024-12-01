@@ -11,9 +11,9 @@
 
 <body>
     <div id="container">
-        <h1>Purchase Entry</h1>
+        <h1 class="box title-box">Purchase Entry</h1>
         <form id="purchase-form" method="POST" action="/submit">
-            <fieldset>
+            <fieldset class="box">
                 <label for="merchant">Merchant</label>
                 <input list="merchants" type="text" id="merchant" name="merchant" required />
                 <label for="date">Date</label>
@@ -22,8 +22,8 @@
                 <input type="number" id="total" name="total" placeholder="0.00" step="0.01" min="0" required />
             </fieldset>
             <fieldset id="items-container">
-                <h3>Items</h3>
-                <fieldset id="item" class="item">
+                <h2 class="box subtitle-box">Items</h2>
+                <fieldset class="box" id="item" class="item">
                     <label for="name">Name</label>
                     <input list="item-names" id="name" type="text" name="name" required />
                     <label for="price">Price</label>
