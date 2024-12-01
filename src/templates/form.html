@@ -53,10 +53,10 @@
                         <option value="Ed">Ed</option>
                     </select>
                 </fieldset>
-                <button type="button" id="add-item">Add item</button>
-                <button type="button" id="remove-item">Remove item</button>
+                <button type="button" id="remove-item">- item</button>
+                <button type="button" id="add-item">+ item</button>
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit">Submit purchase</button>
         </form>
     </div>
 
@@ -91,7 +91,7 @@
             item.children.quantity.addEventListener('change', updateTotal);
             document
                 .getElementById('items-container')
-                .insertBefore(item, insertButton);
+                .insertBefore(item, removeButton);
             updateTotal();
         });
 
