@@ -16,38 +16,38 @@ body {
     border: solid 1px red;
 }
 
-h1 {
-    font-size: 24pt;
+.box {
     background-color: white;
     color: black;
     margin-left: 0;
     margin-right: 0;
-    padding: 12px 24px;
+    padding: 22px 24px;
+    padding-bottom: 16px;
     border-radius: 8px;
     border: 1px solid rgb(218, 220, 224);
+}
+
+.title-box {
+    font-size: 24pt;
     border-top: 10px solid rgb(0, 132, 168);
 }
 
-h3 {
+.subtitle-box {
+    font-size: 16px;
     background-color: rgb(0, 132, 168);
     color: white;
     font-size: x-large;
-    align-self: center;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
-
 }
-
-/* h2 {
-  color: turquoise
-} */
 
 fieldset {
     padding-bottom: 0%;
+    margin: 0px;
+    border: none;
+    padding: 0px;
 }
 
 label {
+    font-size: 16px;
     margin-right: 100%;
 }
 
@@ -57,7 +57,16 @@ select {
     margin-bottom: 20px;
     margin-top: 5px;
     border: none;
-    border-bottom: 2px solid gray;
+    background-color: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    width: 50%;
+    font-size: 14px;
+    height: 24px;
+    padding: 0px;
+}
+
+input[type="number"] {
+    width: 20%;
 }
 
 input:focus {
