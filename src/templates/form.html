@@ -21,9 +21,9 @@
                 <label for="total">Total</label>
                 <input type="number" id="total" name="total" placeholder="0.00" step="0.01" min="0" required />
             </fieldset>
-            <fieldset id="items-container">
+            <div id="items-container">
                 <h2 class="box subtitle-box">Items</h2>
-                <fieldset class="box" id="item" class="item">
+                <fieldset class="box" id="item">
                     <label for="name">Name</label>
                     <input list="item-names" id="name" type="text" name="name" required />
                     <label for="price">Price</label>
@@ -55,7 +55,7 @@
                 </fieldset>
                 <button type="button" id="add-item">Add item</button>
                 <button type="button" id="remove-item">Remove item</button>
-            </fieldset>
+            </div>
             <button type="submit">Submit</button>
         </form>
     </div>
@@ -97,7 +97,7 @@
 
         // Remove last item
         removeButton.addEventListener('click', function () {
-            const items = document.getElementsByClassName('item');
+            const items = document.querySelectorAll('#item');
             if (items.length > 1) {
                 document
                     .getElementById('items-container')
