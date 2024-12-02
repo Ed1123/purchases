@@ -2,6 +2,7 @@ package google
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/Ed1123/purchases/src/models"
 	sheets "google.golang.org/api/sheets/v4"
@@ -9,12 +10,12 @@ import (
 
 func AddPurchaseToSheet(srv *sheets.Service, spreadsheetId string, purchase models.PurchaseEntry) error {
 	var vr sheets.ValueRange
+	now := time.Now().UTC()
 	for _, item := range purchase.PurchaseItems {
 		dataRow := []interface{}{purchase.Merchant, purchase.Date.Format("2006-01-02"),
-			item.Name, item.Price, item.Quantity, item.Category, item.Recipient}
-		vr.Values = append(vr.Values,
-			dataRow,
-		)
+			item.Name, item.Price, item.Quantity, item.Category, item.Recipient,
+			now.Format("2006-01-02 15:04:05")}
+		vr.Values = append(vr.Values, dataRow)
 	}
 	_, err := srv.Spreadsheets.Values.
 		Append(spreadsheetId, "A1", &vr).
